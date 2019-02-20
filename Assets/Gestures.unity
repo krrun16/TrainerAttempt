@@ -365,6 +365,7 @@ GameObject:
   - component: {fileID: 920508330}
   - component: {fileID: 920508329}
   - component: {fileID: 920508333}
+  - component: {fileID: 920508331}
   m_Layer: 0
   m_Name: Object1
   m_TagString: Untagged
@@ -386,7 +387,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BodySrcManager: {fileID: 2104789371}
   TrackedJoint: 7
-  multiplier: 50
+  multiplier: 15
 --- !u!4 &920508330
 Transform:
   m_ObjectHideFlags: 0
@@ -402,6 +403,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &920508331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920508328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d6345cc5961e2c469260325f70fdbbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swingnoise: {fileID: 0}
+  AttachedObject: {fileID: 920508328}
+  bodyManager: {fileID: 2104789372}
 --- !u!82 &920508333
 AudioSource:
   m_ObjectHideFlags: 0

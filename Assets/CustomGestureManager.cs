@@ -11,18 +11,19 @@ public class CustomGestureManager : MonoBehaviour
     VisualGestureBuilderFrameSource _gestureFrameSource;
     VisualGestureBuilderFrameReader _gestureFrameReader;
     KinectSensor _kinect;
-    Gesture _joust;
-    Gesture _tap;
-    Gesture _overhand;
+    //Gesture _joust;
+    //Gesture _tap;
+    //Gesture _overhand;
     Gesture _swing;
+    string _swingname = "swing.gbd";
 
-    public AudioClip joustnoise;
-    public AudioClip tapnoise;
-    public AudioClip overhandnoise;
+    //public AudioClip joustnoise;
+    //public AudioClip tapnoise;
+    //public AudioClip overhandnoise;
     public AudioClip swingnoise;
-    AudioSource audiosource;
+    AudioSource audiosource = null;
     public GameObject AttachedObject;
-
+    public BodySourceManager bodyManager;
     public void SetTrackingId(ulong id)
     {
         _gestureFrameReader.IsPaused = false;
@@ -33,28 +34,29 @@ public class CustomGestureManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        _kinect = KinectSensor.GetDefault();
-
-        _gestureDatabase = VisualGestureBuilderDatabase.Create(Application.streamingAssetsPath + "/swing.gbd");
-
+        bodyManager = this.gameObject.GetComponent<BodySourceManager>();
+        _gestureDatabase = VisualGestureBuilderDatabase.Create(Application.dataPath + "/swing.gbd");
         _gestureFrameSource = VisualGestureBuilderFrameSource.Create(_kinect, 0);
-
+        _swing = _gestureDatabase.AvailableGestures[0];
+        Debug.Log(_gestureDatabase.AvailableGestures[0]);
+        Debug.Log(_gestureFrameSource);
+        _gestureFrameSource.AddGesture(_swing);
         foreach (var gesture in _gestureDatabase.AvailableGestures)
         {
             _gestureFrameSource.AddGesture(gesture);
 
-            if (gesture.Name == "joust")
+            /*if (gesture.Name == "joust")
             {
                 _joust = gesture;
                 audiosource.PlayOneShot(joustnoise);
-            }
+            }*/
             if (gesture.Name == "swing")
             {
                 _swing = gesture;
 
                 audiosource.PlayOneShot(swingnoise);
             }
-            if (gesture.Name == "tap")
+            /* if (gesture.Name == "tap")
             {
                 _tap = gesture;
                 audiosource.PlayOneShot(tapnoise);
@@ -63,7 +65,7 @@ public class CustomGestureManager : MonoBehaviour
             {
                 _overhand = gesture;
                 audiosource.PlayOneShot(overhandnoise);
-            }
+            }*/
         }
 
         _gestureFrameReader = _gestureFrameSource.OpenReader();

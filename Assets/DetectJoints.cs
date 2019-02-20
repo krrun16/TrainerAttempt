@@ -9,10 +9,14 @@ public class DetectJoints : MonoBehaviour
     public JointType TrackedJoint;
     private BodySourceManager bodyManager;
     private Body[] bodies;
-    public float multiplier = 25;
+    public float multiplier = 15;
+    static readonly float MaxRecordingTime = 5000.0f;
+    float m_stopRecordingTimer = float.MaxValue;
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Start Position" + gameObject.transform.position);
+
         if (BodySrcManager == null)
         {
             Debug.Log("Assign!");
@@ -25,7 +29,10 @@ public class DetectJoints : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    { if (bodyManager == null)
+
+    {
+
+        if (bodyManager == null)
         {
             return;
         } bodies = bodyManager.GetData();
@@ -45,5 +52,9 @@ public class DetectJoints : MonoBehaviour
                 gameObject.transform.position = new Vector3(pos.X * multiplier, pos.Y * multiplier, pos.Z);
             }
         }
+    }
+    void OnDisable()
+    {
+        Debug.Log("End Position" + gameObject.transform.position);
     }
 }
