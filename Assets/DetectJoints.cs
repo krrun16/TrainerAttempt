@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Windows.Kinect;
+using UnityEditor.Animations;
+using Microsoft.Kinect.VisualGestureBuilder;
 
 public class DetectJoints : MonoBehaviour
 {
@@ -9,13 +11,17 @@ public class DetectJoints : MonoBehaviour
     public JointType TrackedJoint;
     private BodySourceManager bodyManager;
     private Body[] bodies;
-    public float multiplier = 15;
-    static readonly float MaxRecordingTime = 5000.0f;
-    float m_stopRecordingTimer = float.MaxValue;
+    public float multiplier = 10;
+    private GameObjectRecorder new_recorder;
+    public AnimationClip new_clip;
+    public bool record = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Start Position" + gameObject.transform.position);
+        new_recorder = new GameObjectRecorder(gameObject);
+        new_recorder.BindComponentsOfType<Transform>(gameObject, true);
+        //Debug.Log("Start Position" + gameObject.transform.position);
 
         if (BodySrcManager == null)
         {
@@ -26,6 +32,7 @@ public class DetectJoints : MonoBehaviour
             bodyManager = BodySrcManager.GetComponent<BodySourceManager>();
         }
     }
+    int count = 0;
 
     // Update is called once per frame
     void Update()
@@ -48,13 +55,26 @@ public class DetectJoints : MonoBehaviour
             }
             if (body.IsTracked)
             {
+                Debug.Log("Start Position" + count + gameObject.transform.position);
                 var pos = body.Joints[TrackedJoint].Position;
                 gameObject.transform.position = new Vector3(pos.X * multiplier, pos.Y * multiplier, pos.Z);
+                //transform.Rotate(pos.X, 0, pos.Z);
+                //transform.Rotate(Vector3.right * Time.deltaTime);
+                Debug.Log("End Position" + count + gameObject.transform.position);
+                count++;
             }
         }
     }
+
+    void LateUpdate()
+    {
+        new_recorder.TakeSnapshot(Time.deltaTime);    
+    }
     void OnDisable()
     {
-        Debug.Log("End Position" + gameObject.transform.position);
+        new_recorder.SaveToClip(new_clip);
+        new_recorder.ResetRecording();
+
+        //Debug.Log("End Position" + gameObject.transform.position);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//depending on force, we can use a set of random numbers (0-5) for weak, (10-20) for OK, (25-40) for excellent and overshooting the game for too hard
+
 public class SphereScript : MonoBehaviour
 {
     public float duration = 1; // in seconds
@@ -29,7 +29,7 @@ public class SphereScript : MonoBehaviour
         }
     }
 
-    void Update()
+    void OnCollision()
     {
 
         Vector3 center = (beginPoint + finalPoint) * 0.5F;

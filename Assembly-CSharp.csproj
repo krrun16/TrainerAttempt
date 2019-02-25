@@ -60,8 +60,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\BodySourceManager1.cs" />
-    <Compile Include="Assets\CustomGestureManager.cs" />
     <Compile Include="Assets\DetectJoints.cs" />
     <Compile Include="Assets\KinectView\Scripts\BodySourceManager.cs" />
     <Compile Include="Assets\KinectView\Scripts\BodySourceView.cs" />
@@ -73,6 +71,7 @@
     <Compile Include="Assets\KinectView\Scripts\InfraredSourceManager.cs" />
     <Compile Include="Assets\KinectView\Scripts\InfraredSourceView.cs" />
     <Compile Include="Assets\KinectView\Scripts\MultiSourceManager.cs" />
+    <Compile Include="Assets\NewGesMan.cs" />
     <Compile Include="Assets\SphereScript.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/eclzak/Desktop/New folder/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
