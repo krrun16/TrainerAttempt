@@ -21,8 +21,6 @@ public class DetectJoints : MonoBehaviour
     {
         new_recorder = new GameObjectRecorder(gameObject);
         new_recorder.BindComponentsOfType<Transform>(gameObject, true);
-        //Debug.Log("Start Position" + gameObject.transform.position);
-
         if (BodySrcManager == null)
         {
             Debug.Log("Assign!");

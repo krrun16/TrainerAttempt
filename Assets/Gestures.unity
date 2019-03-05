@@ -324,7 +324,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920508328}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: e9d0e996a593f37479cfe7b2dda17bc9, type: 2}
   m_CullingMode: 0
@@ -347,6 +347,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee3ea9d286ddd844cab2bc087fed7f2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bodyManager: {fileID: 2104789372}
+  swingnoise: {fileID: 8300000, guid: ccf56c358830d5b47b58c282ac51e7a0, type: 3}
+  joustnoise: {fileID: 8300000, guid: ccac4610a1e00724fac55e39ddf31fea, type: 3}
+  overhandnoise: {fileID: 8300000, guid: ecf21f8c0812bb247b7fbeedd348b717, type: 3}
+  tapnoise: {fileID: 8300000, guid: 18f97f2fa166bf9408e5767b380746d9, type: 3}
 --- !u!82 &920508333
 AudioSource:
   m_ObjectHideFlags: 0
@@ -450,7 +455,7 @@ Animation:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920508328}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: 4a4b868cfa70c7e4e86fdb85bf11ec67, type: 2}
   m_Animations:
