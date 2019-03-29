@@ -5,17 +5,29 @@ using Microsoft.Kinect.VisualGestureBuilder;
 using UnityEngine;
 using System.IO;
 using AudioSource = UnityEngine.AudioSource;
+using System;
+
 
 public class NewGesMan : MonoBehaviour
 {
     public BodySourceManager bodyManager;
     private Body[] bodies;
+    private readonly string JoustProgressName = "joustProgress";
+    private readonly string SwingProgressName = "swingProgress";
+    private readonly string OverhandProgressName = "forehandProgress";
+    private readonly string Swingend = "finishswing";
+    private readonly string Joustend = "joustend";
+    private readonly string Forehandend = "forehandend";
+    private readonly string Overheadend = "endabove";
 
-    //public AudioClip swingnoise;
-    //public AudioClip joustnoise;
-    //public AudioClip overhandnoise;
-    //public AudioClip tapnoise;
-    //AudioSource audiosource;
+
+    public AudioClip joustsound;
+    public AudioClip swingsound;
+    public AudioClip overhandsound;
+    public AudioClip overheadsound;
+
+
+    private AudioSource audioSource;
     VisualGestureBuilderFrameSource _vgbframesource = null;
     VisualGestureBuilderFrameReader vgbFrameReader;
     KinectSensor _kinect = null;
@@ -25,17 +37,18 @@ public class NewGesMan : MonoBehaviour
         _kinect = KinectSensor.GetDefault();
         if (_kinect != null)
         {
-            //audiosource = GetComponent<AudioSource>();
 
 
             _vgbframesource = VisualGestureBuilderFrameSource.Create(_kinect, 0);
             vgbFrameReader = _vgbframesource.OpenReader();
+            this.vgbFrameReader.FrameArrived += this.Reader_GestureFrameArrived;
+            audioSource = GetComponent<AudioSource>();
 
             if (vgbFrameReader != null)
             {
                 vgbFrameReader.IsPaused = true;
             }
-            var databasePath = @"Database\swingset.gbd";
+            var databasePath = @"Database\try3.gbd";
             using (VisualGestureBuilderDatabase database = VisualGestureBuilderDatabase.Create(databasePath))
             {
 
@@ -43,14 +56,118 @@ public class NewGesMan : MonoBehaviour
                 {
                     this._vgbframesource.AddGesture(gesture);
 
+
                 }
             }
         }
     }
 
+    private void Reader_GestureFrameArrived(object sender, VisualGestureBuilderFrameArrivedEventArgs e)
+    {
+        VisualGestureBuilderFrameReference frameReference = e.FrameReference;
+        using (VisualGestureBuilderFrame frame = frameReference.AcquireFrame())
+            if (frame != null)
+            {
+                var continuousResults = frame.ContinuousGestureResults;
+                var discreteResults = frame.DiscreteGestureResults;
+                if (discreteResults != null)
+                {
+                    foreach (Gesture gesture in this._vgbframesource.Gestures)
+                    {
+                        if (gesture.GestureType == GestureType.Discrete)
+                        {
+                            DiscreteGestureResult result = null;
+                            discreteResults.TryGetValue(gesture, out result);
+                            if (result != null)
+                            {
+                                Debug.Log(result.Detected);
+
+                                if (result.Detected != false)
+                                    {
+                                    Debug.Log(gesture.Name);
+                                    if (gesture.Name.Equals(Swingend))
+                                        {
+
+                                            audioSource.clip = swingsound;
+                                            audioSource.Play();
 
 
-    void Update()
+                                    }
+                                    if (gesture.Name.Equals(Joustend))
+                                        {
+                                            audioSource.clip = joustsound;
+                                            audioSource.Play();
+                                        }
+                                        if (gesture.Name.Equals(Forehandend))
+                                        {
+
+                                                audioSource.clip = overhandsound;
+                                                audioSource.Play();
+                                            
+                                        }
+                                    if (gesture.Name.Equals(Overheadend))
+                                    {
+
+                                        audioSource.clip = overheadsound;
+                                        audioSource.Play();
+
+                                    }
+
+
+                                }
+                            }
+                        }
+
+                        if (continuousResults != null)
+                        {
+
+                            if (gesture.Name.Equals(this.SwingProgressName) && gesture.GestureType == GestureType.Continuous)
+                            {
+                                ContinuousGestureResult result = null;
+                                continuousResults.TryGetValue(gesture, out result);
+
+                                if (result.Progress >= .94)
+                                {
+                                     Debug.Log(gesture.Name);
+                                }
+
+                            }
+                            if (gesture.Name.Equals(this.JoustProgressName) && gesture.GestureType == GestureType.Continuous)
+                            {
+
+                                ContinuousGestureResult result = null;
+                                continuousResults.TryGetValue(gesture, out result);
+                                if (result.Progress >= .95)
+                                {
+                                    Debug.Log(result.Progress + gesture.Name);
+
+                                }
+
+
+
+                            }
+
+                            if (gesture.Name.Equals(this.OverhandProgressName) && gesture.GestureType == GestureType.Continuous)
+                            {
+                                ContinuousGestureResult result = null;
+                                continuousResults.TryGetValue(gesture, out result);
+                                if (result.Progress >= .95)
+                                {
+                                    Debug.Log(result.Progress + gesture.Name);
+
+                                }
+
+                            }
+                        }
+                        
+                    }
+
+                }
+            }
+        }
+    
+
+        void Update()
     {
         if (bodyManager == null)
         {
@@ -71,117 +188,18 @@ public class NewGesMan : MonoBehaviour
             {
                 _vgbframesource.TrackingId = body.TrackingId;
                 vgbFrameReader.IsPaused = false;
-                if (vgbFrameReader != null)
-                {
-                    vgbFrameArrived();
-                }
+
             }
         }
-    }
 
-    public void vgbFrameArrived()
-    {
-        using (var frame = this.vgbFrameReader.CalculateAndAcquireLatestFrame())
-        {
-            if (frame != null)
-            {
-                foreach (var result in frame.DiscreteGestureResults)
-                {
-                    Gesture gesture = result.Key;
-                    var gestureResult = result.Value as DiscreteGestureResult;
-                    float lastConfidence = gestureResult.Confidence;
-                    if (lastConfidence > 0)
-                    {
-                        Debug.Log(lastConfidence);
-                        //Debug.Log(gesture.Name);
-                    }
-                }
-                foreach (var result in frame.ContinuousGestureResults)
-                {
-                    Gesture gesture = result.Key;
-                    var gestureResult = result.Value as ContinuousGestureResult;
-                    float lastProgress = gestureResult.Progress;
-
-                }
-            }
         }
-    }
+
+
 }
-    
-    
-    
-    /*
-    public void UpdateGesture()
-    {
-
-        using (var frame = this.vgbFrameReader.CalculateAndAcquireLatestFrame())
-        {
-
-            if (frame != null)
-            {
-                var discreteGes = frame.DiscreteGestureResults;
-                var continuousGes = frame.ContinuousGestureResults;
-                if (discreteGes != null)
-                {
-
-                   foreach (var gesture in this._vgbframesource.Gestures)
 
 
 
 
-                        if (gesture.GestureType == GestureType.Discrete)
-                        {
-                                    if (gesture.Name.Equals(this.swing))
-                                    {
-                                        //audiosource.PlayOneShot(swingnoise, .7f);
-                                        //Debug.Log("Great swing!");
-
-                                    }
-                                    else if(gesture.Name.Equals(this.joust))
-                                    {
-                                        //Debug.Log("Bad swing");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        
-    
-
-                                
-                                else if (gesture.Name.Equals("joust"))
-                                {
-                                    //audiosource.PlayOneShot(joustnoise, .7f);
-
-                                    //Debug.Log("Joust swing!");
-
-                                }
-                                else if (gesture.Name.Equals("overhand"))
-                                {
-                                    //audiosource.PlayOneShot(overhandnoise, .7f);
-                                    //Debug.Log("Overhand swing!");
-
-                                }
-                                else if (gesture.Name.Equals("tap"))
-                                {
-                                    //audiosource.PlayOneShot(tapnoise, .7f);
-                                    //Debug.Log("Tap swing!");
-
-                                }
-                            }
-
-
-                        }
-                    }
-                }
-            }
-
-        }
-    }
-}*/
 
 
 
-   

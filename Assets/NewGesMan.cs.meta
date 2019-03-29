@@ -3,7 +3,11 @@ guid: ee3ea9d286ddd844cab2bc087fed7f2e
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - bodyManager: {instanceID: 0}
+  - joustsound: {fileID: 8300000, guid: ccac4610a1e00724fac55e39ddf31fea, type: 3}
+  - swingsound: {fileID: 8300000, guid: ccf56c358830d5b47b58c282ac51e7a0, type: 3}
+  - overhandsound: {fileID: 8300000, guid: ff755b15adb8b1e498f8e0e49ccc66bb, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
