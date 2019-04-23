@@ -25,9 +25,11 @@ public class NewGesMan : MonoBehaviour
     public AudioClip swingsound;
     public AudioClip overhandsound;
     public AudioClip overheadsound;
+    public AudioClip endsound;
 
 
     private AudioSource audioSource;
+    private AudioSource audioSource1;
     VisualGestureBuilderFrameSource _vgbframesource = null;
     VisualGestureBuilderFrameReader vgbFrameReader;
     KinectSensor _kinect = null;
@@ -43,18 +45,20 @@ public class NewGesMan : MonoBehaviour
             vgbFrameReader = _vgbframesource.OpenReader();
             this.vgbFrameReader.FrameArrived += this.Reader_GestureFrameArrived;
             audioSource = GetComponent<AudioSource>();
+            audioSource1 = GetComponent<AudioSource>();
 
             if (vgbFrameReader != null)
             {
                 vgbFrameReader.IsPaused = true;
             }
-            var databasePath = @"Database\try3.gbd";
+            var databasePath = @"Database\newtry.gbd";
             using (VisualGestureBuilderDatabase database = VisualGestureBuilderDatabase.Create(databasePath))
             {
 
                 foreach (Gesture gesture in database.AvailableGestures)
                 {
                     this._vgbframesource.AddGesture(gesture);
+                    Debug.Log(gesture.Name);
 
 
                 }
@@ -80,18 +84,14 @@ public class NewGesMan : MonoBehaviour
                             discreteResults.TryGetValue(gesture, out result);
                             if (result != null)
                             {
-                                Debug.Log(result.Detected);
-
                                 if (result.Detected != false)
                                     {
-                                    Debug.Log(gesture.Name);
+                                    //Debug.Log(gesture.Name);
                                     if (gesture.Name.Equals(Swingend))
                                         {
 
                                             audioSource.clip = swingsound;
                                             audioSource.Play();
-
-
                                     }
                                     if (gesture.Name.Equals(Joustend))
                                         {
@@ -125,10 +125,11 @@ public class NewGesMan : MonoBehaviour
                             {
                                 ContinuousGestureResult result = null;
                                 continuousResults.TryGetValue(gesture, out result);
-
-                                if (result.Progress >= .94)
+                                if (result.Progress >= .97)
                                 {
-                                     Debug.Log(gesture.Name);
+                                    // Debug.Log(gesture.Name);
+
+
                                 }
 
                             }
@@ -137,7 +138,7 @@ public class NewGesMan : MonoBehaviour
 
                                 ContinuousGestureResult result = null;
                                 continuousResults.TryGetValue(gesture, out result);
-                                if (result.Progress >= .95)
+                                if (result.Progress == 1)
                                 {
                                     Debug.Log(result.Progress + gesture.Name);
 
@@ -151,7 +152,7 @@ public class NewGesMan : MonoBehaviour
                             {
                                 ContinuousGestureResult result = null;
                                 continuousResults.TryGetValue(gesture, out result);
-                                if (result.Progress >= .95)
+                                if (result.Progress == 1)
                                 {
                                     Debug.Log(result.Progress + gesture.Name);
 

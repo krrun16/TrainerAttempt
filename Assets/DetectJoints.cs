@@ -12,15 +12,12 @@ public class DetectJoints : MonoBehaviour
     private BodySourceManager bodyManager;
     private Body[] bodies;
     public float multiplier = 10;
-    private GameObjectRecorder new_recorder;
-    public AnimationClip new_clip;
-    public bool record = false;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        new_recorder = new GameObjectRecorder(gameObject);
-        new_recorder.BindComponentsOfType<Transform>(gameObject, true);
+
         if (BodySrcManager == null)
         {
             Debug.Log("Assign!");
@@ -53,24 +50,20 @@ public class DetectJoints : MonoBehaviour
             }
             if (body.IsTracked)
             {
+                Vector3 start;
+                Vector3 end;
+                start = gameObject.transform.position;
                 //Debug.Log("Start Position" + count + gameObject.transform.position);
                 var pos = body.Joints[TrackedJoint].Position;
                 gameObject.transform.position = new Vector3(pos.X * multiplier, pos.Y * multiplier, pos.Z);
                 //Debug.Log("End Position" + count + gameObject.transform.position);
+                end = gameObject.transform.position;
                 count++;
+
+               
             }
         }
     }
 
-    void LateUpdate()
-    {
-        new_recorder.TakeSnapshot(Time.deltaTime);    
-    }
-    void OnDisable()
-    {
-        new_recorder.SaveToClip(new_clip);
-        new_recorder.ResetRecording();
 
-        //Debug.Log("End Position" + gameObject.transform.position);
-    }
 }
