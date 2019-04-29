@@ -55,7 +55,7 @@ public class DetectJoints : MonoBehaviour
                 start = gameObject.transform.position;
                 //Debug.Log("Start Position" + count + gameObject.transform.position);
                 var pos = body.Joints[TrackedJoint].Position;
-                gameObject.transform.position = new Vector3(pos.X * multiplier, pos.Y * multiplier, pos.Z);
+                gameObject.transform.position = new Vector3(pos.X * multiplier, pos.Y * multiplier, pos.Z * 5);
                 //Debug.Log("End Position" + count + gameObject.transform.position);
                 end = gameObject.transform.position;
                 count++;
